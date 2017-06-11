@@ -3,8 +3,6 @@ require 'byebug'
 require_relative '../selector'
 
 RSpec.describe Selector do
-  subject { Selector.new :unplayed, file: fixture_file }
-
   describe '#random' do
     subject { Selector.new(:unplayed, file: fixture_file).random }
 
