@@ -1,8 +1,10 @@
 require 'nokogiri'
 require 'open-uri'
+require_relative 'game'
 
 class Selector
-  URL = 'http://blog.trueheart78.com/games/'
+  URL = 'http://blog.trueheart78.com/games/'.freeze
+  TYPES = %w[unplayed for-fun].freeze
 
   def initialize(type = :unplayed)
     @type = type
@@ -39,26 +41,7 @@ class Selector
   end
 
   def games
-    section.search('li').map(&:text).map { |g| parse g }
-  end
-
-  def parse(name)
-    game_tags = extract_tags name
-    {
-      name: game_name(name, game_tags),
-      tags: game_tags.map(&:upcase)
-    }
-  end
-
-  def game_name(name, game_tags)
-    game_tags.each do |t|
-      name.gsub! "(#{t})", ''
-    end
-    name.rstrip
-  end
-
-  def extract_tags(text)
-    text.gsub(') (', '|').match(/.+\((.+)\)/)[1].split('|')
+    section.search('li').map(&:text).map { |g| Game.new g }
   end
 
   def section
