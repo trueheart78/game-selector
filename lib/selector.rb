@@ -4,8 +4,8 @@ require 'open-uri'
 class Selector
   URL = 'http://blog.trueheart78.com/games/'
 
-  def initialize(tag = :unplayed)
-    @tag = tag
+  def initialize(type = :unplayed)
+    @type = type
     @section = nil
     @error = nil
   end
@@ -32,10 +32,10 @@ class Selector
 
   private
 
-  attr_reader :tag
+  attr_reader :type
 
   def tags?
-    html.include?("#{tag}:start") && html.include?("#{tag}:end")
+    html.include?("#{type}:start") && html.include?("#{type}:end")
   end
 
   def games
@@ -63,7 +63,7 @@ class Selector
 
   def section
     return @section if @section
-    html.match(/<!--\s#{tag}:start\s-->(.+)<!--\s#{tag}:end\s-->/m).tap do |s|
+    html.match(/<!--\s#{type}:start\s-->(.+)<!--\s#{type}:end\s-->/m).tap do |s|
       @section = Nokogiri::HTML(s[1]) if s
     end
   end

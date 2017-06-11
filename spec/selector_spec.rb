@@ -1,6 +1,6 @@
 require_relative 'spec_helper'
 require 'byebug'
-require_relative '../selector'
+require_relative '../lib/selector'
 
 RSpec.describe Selector do
   describe '#random' do
