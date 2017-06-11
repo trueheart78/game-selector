@@ -1,10 +1,13 @@
 require 'nokogiri'
+require 'open-uri'
 
 class Selector
-  def initialize(tag = :unplayed, file: nil)
+  URL = 'http://blog.trueheart78.com/games/'
+
+  def initialize(tag = :unplayed)
     @tag = tag
-    @file = file
     @section = nil
+    @error = nil
   end
 
   def random
@@ -13,13 +16,23 @@ class Selector
   end
 
   def all
-    return unless tags? && section
+    return [] unless tags? && section
     games
+  end
+
+  def error?
+    return true if error
+  end
+
+  def error
+    return 'No matching data found' unless tags? && section
+    return @error if @error
+    nil
   end
 
   private
 
-  attr_reader :tag, :file
+  attr_reader :tag
 
   def tags?
     html.include?("#{tag}:start") && html.include?("#{tag}:end")
@@ -56,6 +69,8 @@ class Selector
   end
 
   def html
-    @html ||= File.read(file) if file
+    @html ||= File.read(open(URL))
+  rescue OpenURI::HTTPError
+    @html = ''
   end
 end
