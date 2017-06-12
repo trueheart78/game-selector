@@ -4,7 +4,7 @@ require_relative 'game'
 
 class Selector
   URL = 'http://blog.trueheart78.com/games/'.freeze
-  TYPES = %w[unplayed for-fun].freeze
+  TYPES = %w[unplayed for-fun playing].freeze
 
   def initialize(type = :unplayed)
     @type = type

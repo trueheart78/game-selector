@@ -16,7 +16,7 @@ RSpec.describe Selector do
 
       it { is_expected.to eq types }
 
-      let(:types) { %w[unplayed for-fun] }
+      let(:types) { %w[unplayed for-fun playing] }
     end
   end
 
