@@ -2,15 +2,9 @@ require_relative 'spec_helper'
 require_relative '../lib/selector'
 
 RSpec.describe Selector do
+  before { allow(Site).to receive(:select).and_return url }
+
   describe 'constants' do
-    describe 'URL' do
-      subject { described_class::URL }
-
-      it { is_expected.to eq url }
-
-      let(:url) { 'http://blog.trueheart78.com/games/' }
-    end
-
     describe 'TYPES' do
       subject { described_class::TYPES }
 
@@ -41,11 +35,23 @@ RSpec.describe Selector do
   describe '#all' do
     subject { Selector.new(:unplayed).all }
 
-    context 'when the data is available' do
+    context 'when parsing a page with the comment tags' do
       before { stub_url }
 
       it 'lists all unplayed games' do
         expect(subject.size).to eq 23
+      end
+    end
+
+    context 'when parsing a page without the comment tags' do
+      before { stub_url }
+
+      it 'lists all unplayed games' do
+        expect(subject.size).to eq 49
+      end
+
+      let(:fixture_file) do
+        File.join Dir.pwd, 'spec', 'fixtures', 'without-comments.html'
       end
     end
 
@@ -95,14 +101,15 @@ RSpec.describe Selector do
   let(:fixture_file) do
     File.join Dir.pwd, 'spec', 'fixtures', 'sample.html'
   end
+  let(:url) { 'http://www.butts.com/games/' }
 
   def stub_url
-    stub_request(:get, described_class::URL)
+    stub_request(:get, url)
       .to_return status: 200, body: File.read(fixture_file)
   end
 
   def stub_url_failure
-    stub_request(:get, described_class::URL)
+    stub_request(:get, url)
       .to_return status: 400
   end
 end

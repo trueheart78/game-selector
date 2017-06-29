@@ -2,7 +2,11 @@ require 'sinatra'
 require_relative 'selector'
 
 get '/' do
-  Selector.new(:unplayed).random.to_s
+  Selector.new(:unplayed, params[:site]).random.to_s
+end
+
+get '/batman' do
+  Selector.new(:unplayed, :batman).random.to_s
 end
 
 get '/types' do
