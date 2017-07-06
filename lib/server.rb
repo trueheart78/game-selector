@@ -20,13 +20,22 @@ before '/api*' do
 end
 
 get '/api' do
-  { game: Selector.new(:unplayed, params[:site]).random.to_s }.to_json
+  {
+    game: Selector.new(:unplayed, params[:site]).random.to_s
+  }.to_json
+end
+
+get '/api/batman' do
+  {
+    game: Selector.new(:unplayed, :batman).random.to_s
+  }.to_json
 end
 
 get '/api/:type' do
   return 404 unless Selector::TYPES.include? params[:type]
-  Selector.new(params[:type]).random.to_s
-  { game: Selector.new(params[:type]).random.to_s }.to_json
+  {
+    game: Selector.new(params[:type]).random.to_s
+  }.to_json
 end
 
 get '/:type' do
