@@ -16,6 +16,7 @@ end
 
 before '/api*' do
   content_type 'application/json'
+  response['Access-Control-Allow-Origin'] = '*'
 end
 
 get '/api' do
