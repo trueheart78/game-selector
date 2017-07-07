@@ -55,6 +55,18 @@ RSpec.describe Selector do
       end
     end
 
+    context 'when parsing a page with extra elements in the list items' do
+      before { stub_url }
+
+      it 'lists all unplayed games' do
+        expect(subject.size).to eq 49
+      end
+
+      let(:fixture_file) do
+        File.join Dir.pwd, 'spec', 'fixtures', 'extra-elements.html'
+      end
+    end
+
     context 'when the data is unavailable' do
       before { stub_url_failure }
 

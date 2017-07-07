@@ -50,7 +50,7 @@ class Selector
   end
 
   def list?
-    html.include?('<li>') && html.include?('</li>')
+    (html.include?('<li>') || html.include?('<li ')) && html.include?('</li>')
   end
 
   def games
