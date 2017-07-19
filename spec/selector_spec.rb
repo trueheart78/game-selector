@@ -2,7 +2,7 @@ require_relative 'spec_helper'
 require_relative '../lib/selector'
 
 RSpec.describe Selector do
-  before { allow(Site).to receive(:select).and_return url }
+  before { allow(Site).to receive :select }
 
   describe 'constants' do
     describe 'TYPES' do
@@ -15,111 +15,27 @@ RSpec.describe Selector do
   end
 
   describe '#random' do
-    subject { Selector.new(:unplayed).random }
+    before  { stub_html_content }
+    subject { described_class.new(:unplayed).random }
 
     context 'when the data is available' do
-      before { stub_html_content }
-
       it 'returns a single game' do
         expect(subject).to be_a Game
       end
+
+      let(:items) { ['a', 'b'] }
     end
 
     context 'when the data is unavailable' do
-      before { stub_html_content_failure }
-
       it { is_expected.to be_nil }
+
+      let(:items) { [] }
     end
+
+    let(:html_content) { FakeHtmlContent.new items: items }
   end
-
-  describe '#all' do
-    subject { Selector.new(:unplayed).all }
-
-    context 'when parsing a page with the comment tags' do
-      before { stub_html_content }
-
-      it 'lists all unplayed games' do
-        expect(subject.size).to eq 23
-      end
-    end
-
-    context 'when parsing a page without the comment tags' do
-      before { stub_html_content }
-
-      it 'lists all unplayed games' do
-        expect(subject.size).to eq 49
-      end
-
-      let(:fixture_file) do
-        File.join Dir.pwd, 'spec', 'fixtures', 'without-comments.html'
-      end
-    end
-
-    context 'when parsing a page with extra elements in the list items' do
-      before { stub_html_content }
-
-      it 'lists all unplayed games' do
-        expect(subject.size).to eq 49
-      end
-
-      let(:fixture_file) do
-        File.join Dir.pwd, 'spec', 'fixtures', 'extra-elements.html'
-      end
-    end
-
-    context 'when the data is unavailable' do
-      before { stub_html_content_failure }
-
-      it 'lists no games' do
-        expect(subject.size).to be 0
-      end
-    end
-  end
-
-  describe '#error' do
-    subject { Selector.new(:unplayed).error }
-
-    context 'when the data is available' do
-      before { stub_html_content }
-
-      it { is_expected.to be_nil }
-    end
-
-    context 'when the data is unavailable' do
-      before  { stub_html_content_failure }
-
-      it 'has the expected message' do
-        expect(subject).to eq 'No matching data found'
-      end
-    end
-  end
-
-  describe '#error?' do
-    subject { Selector.new(:unplayed).error? }
-
-    context 'when the data is available' do
-      before { stub_html_content }
-
-      it { is_expected.to be_falsey }
-    end
-
-    context 'when the data is unavailable' do
-      before { stub_html_content_failure }
-
-      it { is_expected.to be true }
-    end
-  end
-
-  let(:fixture_file) do
-    File.join Dir.pwd, 'spec', 'fixtures', 'sample.html'
-  end
-  let(:url) { 'http://www.butts.com/games/' }
 
   def stub_html_content
-    allow_any_instance_of(Html).to receive(:content).and_return File.read(fixture_file)
-  end
-
-  def stub_html_content_failure
-    allow_any_instance_of(Html).to receive(:content).and_return ''
+    allow_any_instance_of(Html).to receive(:content).and_return html_content
   end
 end

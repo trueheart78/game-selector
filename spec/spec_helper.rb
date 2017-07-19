@@ -14,6 +14,9 @@
 #
 require 'webmock/rspec'
 require 'byebug'
+require_relative 'support/fixtures'
+require_relative 'support/fake_html_content'
+
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
   # rspec-expectations config goes here. You can use an alternate

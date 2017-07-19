@@ -3,22 +3,23 @@ require 'open-uri'
 require 'net/http'
 require 'net/https'
 
+require_relative 'html_content'
+
 class Html
-  def initialize(url)
+  def initialize(url, type = nil)
     @url = url
+    @type = type
+    @content = nil
   end
 
   def content
-    @content ||= page_content
-  end
-
-  def content?
-    content != ''
+    return @content if @content
+    @content = HtmlContent.new page_content, type
   end
 
   private
 
-  attr_reader :url
+  attr_reader :url, :type
 
   def page_content
     uri = URI.parse url
