@@ -1,7 +1,7 @@
 require_relative 'spec_helper'
-require_relative '../lib/selector'
+require_relative '../lib/game_selector'
 
-RSpec.describe Selector do
+RSpec.describe GameSelector do
   before { allow(Site).to receive :select }
 
   describe 'constants' do

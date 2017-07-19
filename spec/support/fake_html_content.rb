@@ -6,8 +6,8 @@ class FakeHtmlContent
     @items   = items
   end
 
-  def valid?
-    return true unless items.empty?
+  def error?
+    return true if items.empty?
     false
   end
 end

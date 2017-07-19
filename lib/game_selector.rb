@@ -2,7 +2,7 @@ require_relative 'html'
 require_relative 'site'
 require_relative 'game'
 
-class Selector
+class GameSelector
   TYPES = %w[unplayed for-fun playing].freeze
 
   def initialize(type = :unplayed, site = :default)
@@ -13,12 +13,12 @@ class Selector
   end
 
   def random
-    return unless html.valid?
+    return if html.error?
     games.sample
   end
 
   def all
-    return [] unless html.valid?
+    return [] if html.error?
     games
   end
 

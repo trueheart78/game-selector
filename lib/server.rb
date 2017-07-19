@@ -1,17 +1,17 @@
 require 'sinatra'
 require 'json'
-require_relative 'selector'
+require_relative 'game_selector'
 
 get '/' do
-  Selector.new(:unplayed, params[:site]).random.to_s
+  GameSelector.new(:unplayed, params[:site]).random.to_s
 end
 
 get '/batman' do
-  Selector.new(:unplayed, :batman).random.to_s
+  GameSelector.new(:unplayed, :batman).random.to_s
 end
 
 get '/types' do
-  Selector::TYPES.join ', '
+  GameSelector::TYPES.join ', '
 end
 
 before '/api*' do
@@ -21,13 +21,13 @@ end
 
 get '/api' do
   {
-    game: Selector.new(:unplayed, params[:site]).random.to_s
+    game: GameSelector.new(:unplayed, params[:site]).random.to_s
   }.to_json
 end
 
 get '/api/batman' do
   {
-    game: Selector.new(:unplayed, :batman).random.to_s
+    game: GameSelector.new(:unplayed, :batman).random.to_s
   }.to_json
 end
 
@@ -44,13 +44,13 @@ get '/api/character-name/:sex' do
 end
 
 get '/api/:type' do
-  return 404 unless Selector::TYPES.include? params[:type]
+  return 404 unless GameSelector::TYPES.include? params[:type]
   {
-    game: Selector.new(params[:type]).random.to_s
+    game: GameSelector.new(params[:type]).random.to_s
   }.to_json
 end
 
 get '/:type' do
-  return 404 unless Selector::TYPES.include? params[:type]
-  Selector.new(params[:type]).random.to_s
+  return 404 unless GameSelector::TYPES.include? params[:type]
+  GameSelector.new(params[:type]).random.to_s
 end
