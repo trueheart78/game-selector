@@ -33,13 +33,13 @@ end
 
 get '/api/character-name' do
   {
-    name: 'Ashelia (F) - Final Fantasy XII'
+    name: ['Ashelia (F) - Final Fantasy XII', 'Ashe (F) - Final Fantasy XII'].sample
   }.to_json
 end
 
 get '/api/character-name/:sex' do
   {
-    name: 'Ashelia (F) - Final Fantasy XII'
+    name: ['Ashelia (F) - Final Fantasy XII', 'Ashe (F) - Final Fantasy XII'].sample
   }.to_json
 end
 
