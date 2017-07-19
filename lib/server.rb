@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'json'
 require_relative 'game_selector'
+require_relative 'name_selector'
 
 get '/' do
   GameSelector.new(:unplayed, params[:site]).random.to_s
@@ -32,15 +33,11 @@ get '/api/batman' do
 end
 
 get '/api/character-name' do
-  {
-    name: ['Ashelia (F) - Final Fantasy XII', 'Ashe (F) - Final Fantasy XII'].sample
-  }.to_json
+  NameSelector.new.random.to_json
 end
 
 get '/api/character-name/:sex' do
-  {
-    name: ['Ashelia (F) - Final Fantasy XII', 'Ashe (F) - Final Fantasy XII'].sample
-  }.to_json
+  NameSelector.new.random.to_json
 end
 
 get '/api/:type' do

@@ -15,17 +15,34 @@ RSpec.describe Name do
   describe '#to_json' do
     subject { described_class.new(raw_name).to_json }
 
-    it 'returns the expected json' do
-      expect(subject).to eq json
+    context 'when a title is included' do
+      it 'returns the expected json' do
+        expect(subject).to eq json
+      end
+
+      let(:raw_name) { 'Ashe (F) - Final Fantasy XII' }
+      let(:json) do
+        {
+          name: 'Ashe',
+          sex: 'F',
+          title: 'Final Fantasy XII'
+        }.to_json
+      end
     end
 
-    let(:raw_name) { 'Ashe (F) - Final Fantasy XII' }
-    let(:json) do
-      {
-        name: 'Ashe',
-        sex: 'F',
-        title: 'Final Fantasy XII'
-      }.to_json
+    context 'when a title is missing' do
+      it 'returns the expected json' do
+        expect(subject).to eq json
+      end
+
+      let(:raw_name) { 'Ashe (F)' }
+      let(:json) do
+        {
+          name: 'Ashe',
+          sex: 'F',
+          title: ''
+        }.to_json
+      end
     end
   end
 end

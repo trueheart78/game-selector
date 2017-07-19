@@ -64,6 +64,28 @@ RSpec.describe HtmlContent do
 
       let(:type) { :unplayed }
     end
+
+    context ':characters' do
+      subject { described_class.new(content, type).items }
+
+      context 'when parsing a page with the comment tags' do
+        it 'lists all names' do
+          expect(subject.size).to eq 4
+        end
+
+        let(:content) { fixture_data :character_names }
+      end
+
+      context 'when the data is unavailable' do
+        it 'lists no names' do
+          expect(subject.size).to be 0
+        end
+
+        let(:content) { '' }
+      end
+
+      let(:type) { :characters }
+    end
   end
 
   describe '#error' do

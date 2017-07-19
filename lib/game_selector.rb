@@ -8,8 +8,6 @@ class GameSelector
   def initialize(type = :unplayed, site = :default)
     @type = type
     @site = Site.select site
-    @section = nil
-    @error = nil
   end
 
   def random

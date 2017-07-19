@@ -11,6 +11,7 @@ class Name
   end
 
   def to_json
+    parse_data
     {
       name: name,
       sex: sex.to_s.upcase,
@@ -28,17 +29,20 @@ class Name
 
   private
 
-  attr_reader :raw_name
+  attr_reader :raw_name, :name, :sex, :title
 
-  def name
-    @name ||= raw_name.split('(').first.rstrip
+  def parse_data
+    return if name
+    @name  = match[1]
+    @sex   = match[2].downcase.to_sym
+    @title = match[3]
+  rescue NoMethodError
+    puts '*'*20
+    puts raw_name
+    puts '*'*20
   end
 
-  def sex
-    @sex ||= raw_name.split('(')[1].split(')').first.downcase.to_sym
-  end
-
-  def title
-    @title ||= raw_name.split('-').last.lstrip
+  def match
+    @match ||= raw_name.match(/\A(.+)\s+\(([fm])\)\s?\-?\s?(.*)\z/i)
   end
 end

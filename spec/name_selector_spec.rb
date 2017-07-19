@@ -1,29 +1,19 @@
 require_relative 'spec_helper'
-require_relative '../lib/game_selector'
+require_relative '../lib/name_selector'
 
-RSpec.describe GameSelector do
+RSpec.describe NameSelector do
   before { allow(Site).to receive :select }
-
-  describe 'constants' do
-    describe 'TYPES' do
-      subject { described_class::TYPES }
-
-      it { is_expected.to eq types }
-
-      let(:types) { %w[unplayed for-fun playing] }
-    end
-  end
 
   describe '#all' do
     before  { stub_html_content }
     subject { described_class.new.all }
 
     context 'when the data is available' do
-      it 'returns all games' do
+      it 'returns all names' do
         expect(subject.size).to eq items.size
 
         subject.each do |s|
-          expect(s).to be_a Game
+          expect(s).to be_a Name
         end
       end
 
@@ -41,11 +31,11 @@ RSpec.describe GameSelector do
 
   describe '#random' do
     before  { stub_html_content }
-    subject { described_class.new(:unplayed).random }
+    subject { described_class.new.random }
 
     context 'when the data is available' do
-      it 'returns a single game' do
-        expect(subject).to be_a Game
+      it 'returns a single name' do
+        expect(subject).to be_a Name
       end
 
       let(:items) { ['a', 'b'] }
