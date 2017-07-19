@@ -31,6 +31,12 @@ get '/api/batman' do
   }.to_json
 end
 
+get '/api/character-name' do
+  {
+    name: 'Ashelia (F) - Final Fantasy XII'
+  }.to_json
+end
+
 get '/api/:type' do
   return 404 unless Selector::TYPES.include? params[:type]
   {
