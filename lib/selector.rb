@@ -1,11 +1,8 @@
 require 'nokogiri'
-require 'uri'
-require 'open-uri'
-require 'net/http'
-require 'net/https'
 
-require_relative 'game'
+require_relative 'html'
 require_relative 'site'
+require_relative 'game'
 
 class Selector
   TYPES = %w[unplayed for-fun playing].freeze
@@ -69,20 +66,6 @@ class Selector
   end
 
   def html
-    @html ||= site_data
-  end
-
-  def site_data
-    uri = URI.parse site
-
-    http = Net::HTTP.new(uri.host, uri.port)
-    if uri.scheme == 'https'
-      http.use_ssl = true
-      # possibly useful if you see ssl errors
-      # http.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
-    end
-    page = http.start { |session| session.get uri.request_uri }
-    return page.body if page.body
-    ''
+    @html ||= Html.new(site).content
   end
 end

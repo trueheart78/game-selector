@@ -18,7 +18,7 @@ RSpec.describe Selector do
     subject { Selector.new(:unplayed).random }
 
     context 'when the data is available' do
-      before { stub_url }
+      before { stub_html_content }
 
       it 'returns a single game' do
         expect(subject).to be_a Game
@@ -26,7 +26,7 @@ RSpec.describe Selector do
     end
 
     context 'when the data is unavailable' do
-      before { stub_url_failure }
+      before { stub_html_content_failure }
 
       it { is_expected.to be_nil }
     end
@@ -36,7 +36,7 @@ RSpec.describe Selector do
     subject { Selector.new(:unplayed).all }
 
     context 'when parsing a page with the comment tags' do
-      before { stub_url }
+      before { stub_html_content }
 
       it 'lists all unplayed games' do
         expect(subject.size).to eq 23
@@ -44,7 +44,7 @@ RSpec.describe Selector do
     end
 
     context 'when parsing a page without the comment tags' do
-      before { stub_url }
+      before { stub_html_content }
 
       it 'lists all unplayed games' do
         expect(subject.size).to eq 49
@@ -56,7 +56,7 @@ RSpec.describe Selector do
     end
 
     context 'when parsing a page with extra elements in the list items' do
-      before { stub_url }
+      before { stub_html_content }
 
       it 'lists all unplayed games' do
         expect(subject.size).to eq 49
@@ -68,7 +68,7 @@ RSpec.describe Selector do
     end
 
     context 'when the data is unavailable' do
-      before { stub_url_failure }
+      before { stub_html_content_failure }
 
       it 'lists no games' do
         expect(subject.size).to be 0
@@ -80,13 +80,13 @@ RSpec.describe Selector do
     subject { Selector.new(:unplayed).error }
 
     context 'when the data is available' do
-      before { stub_url }
+      before { stub_html_content }
 
       it { is_expected.to be_nil }
     end
 
     context 'when the data is unavailable' do
-      before  { stub_url_failure }
+      before  { stub_html_content_failure }
 
       it 'has the expected message' do
         expect(subject).to eq 'No matching data found'
@@ -98,13 +98,13 @@ RSpec.describe Selector do
     subject { Selector.new(:unplayed).error? }
 
     context 'when the data is available' do
-      before { stub_url }
+      before { stub_html_content }
 
       it { is_expected.to be_falsey }
     end
 
     context 'when the data is unavailable' do
-      before { stub_url_failure }
+      before { stub_html_content_failure }
 
       it { is_expected.to be true }
     end
@@ -115,13 +115,11 @@ RSpec.describe Selector do
   end
   let(:url) { 'http://www.butts.com/games/' }
 
-  def stub_url
-    stub_request(:get, url)
-      .to_return status: 200, body: File.read(fixture_file)
+  def stub_html_content
+    allow_any_instance_of(Html).to receive(:content).and_return File.read(fixture_file)
   end
 
-  def stub_url_failure
-    stub_request(:get, url)
-      .to_return status: 400
+  def stub_html_content_failure
+    allow_any_instance_of(Html).to receive(:content).and_return ''
   end
 end
