@@ -3,13 +3,13 @@ class Game
 
   def initialize(raw_name)
     @raw_name = raw_name
-    @name = nil
+    @title = nil
     @tags = nil
   end
 
-  def name
-    return @name if @name
-    @name = raw_name.split('(').first.rstrip
+  def title
+    return @title if @title
+    @title = raw_name.split('(').first.rstrip
   end
 
   def tags
@@ -20,9 +20,22 @@ class Game
     raw_name
   end
 
+  def to_json
+    {
+      game:   raw_name,
+      title:  title,
+      tags:   tags
+    }.to_json
+  end
+
   private
 
+  def tags?
+    raw_name.include?('(') && raw_name.include?(')')
+  end
+
   def detect_tags
+    return [] unless tags?
     raw_name
       .gsub(') (', '|')
       .match(/.+\((.+)\)/)[1]
