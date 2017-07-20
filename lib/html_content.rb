@@ -10,7 +10,7 @@ class HtmlContent
 
   def items
     return [] if error?
-    section.search('li').map &:text
+    section.search('li').map(&:text)
   end
 
   def error?
