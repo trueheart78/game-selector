@@ -26,6 +26,6 @@ class NameSelector
   end
 
   def html
-    @html ||= Html.new(site, :character).content
+    @html ||= Html.new(site, :characters).content
   end
 end
