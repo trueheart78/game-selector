@@ -3,7 +3,8 @@ require_relative 'site'
 require_relative 'name'
 
 class NameSelector
-  def initialize
+  def initialize(sex = nil)
+    @sex  = sex
     @site = Site.select :characters
   end
 
@@ -19,10 +20,10 @@ class NameSelector
 
   private
 
-  attr_reader :site
+  attr_reader :site, :sex
 
   def names
-    @names ||= html.items.map { |n| Name.new n }
+    @names ||= html.items.map { |n| Name.new n }.select { |n| n.sex? sex }
   end
 
   def html

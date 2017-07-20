@@ -11,12 +11,20 @@ class Name
   end
 
   def to_json
-    parse_data
+    parse_data unless sex
     {
       name: name,
       sex: sex.to_s.upcase,
       title: title
     }.to_json
+  end
+
+  def sex?(sex_lookup)
+    return true if sex_lookup.nil?
+    parse_data unless sex
+    return female? if sex_parser(sex_lookup) == :f
+    return male? if sex_parser(sex_lookup) == :m
+    false
   end
 
   def female?
@@ -30,6 +38,10 @@ class Name
   private
 
   attr_reader :raw_name, :name, :sex, :title
+
+  def sex_parser(sex_lookup)
+    sex_lookup.downcase[0].to_sym
+  end
 
   def parse_data
     return if name

@@ -12,6 +12,57 @@ RSpec.describe Name do
     let(:raw_name) { 'Ashe (F) - Final Fantasy XII' }
   end
 
+  describe '#sex?' do
+    subject { described_class.new(raw_name).sex? sex_lookup }
+
+    context 'female' do
+      it { is_expected.to eq true }
+
+      let(:sex_lookup) { 'female' }
+      let(:raw_name)   { female }
+    end
+
+    context 'male' do
+      it { is_expected.to eq true }
+
+      let(:sex_lookup) { 'male' }
+      let(:raw_name)   { male }
+    end
+
+    context 'female does not exist' do
+      it { is_expected.to eq false }
+
+      let(:sex_lookup) { 'female' }
+      let(:raw_name)   { male }
+    end
+
+    context 'male does not exist' do
+      it { is_expected.to eq false }
+
+      let(:sex_lookup) { 'male' }
+      let(:raw_name)   { female }
+    end
+
+    context 'nil is checked against' do
+      context 'female' do
+        it { is_expected.to eq true }
+
+        let(:raw_name)   { female }
+      end
+
+      context 'male' do
+        it { is_expected.to eq true }
+
+        let(:raw_name)   { male }
+      end
+
+      let(:sex_lookup) { nil }
+    end
+
+    let(:female) { 'Ashe (F) - Final Fantasy XII' }
+    let(:male)   { 'Basch (M) - Final Fantasy XII' }
+  end
+
   describe '#to_json' do
     subject { described_class.new(raw_name).to_json }
 

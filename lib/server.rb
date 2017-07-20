@@ -37,7 +37,7 @@ get '/api/character-name' do
 end
 
 get '/api/character-name/:sex' do
-  NameSelector.new.random.to_json
+  NameSelector.new(params[:sex]).random.to_json
 end
 
 get '/api/:type' do
