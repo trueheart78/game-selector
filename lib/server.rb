@@ -1,23 +1,9 @@
+ENV['RACK_ENV'] = 'development' unless ENV['RACK_ENV']
+
 require 'sinatra'
 require 'json'
-require 'redis'
-require 'singleton'
 require_relative 'game_selector'
 require_relative 'name_selector'
-
-class Butts
-  include Singleton
-
-  attr_reader :redis
-
-  def initialize
-    @redis = Redis.new url: ENV.fetch('REDIS_URL', nil)
-  end
-end
-
-def redis
-  Butts.instance.redis
-end
 
 get '/' do
   GameSelector.new(:unplayed, params[:site]).random.to_s
@@ -64,7 +50,7 @@ get '/api/overwatch/hero' do
   heroes = selectable_heroes key
   hero = heroes.shuffle.first
   heroes.delete hero
-  redis.set key, heroes.to_json if heroes.any?
+  redis.setex key, 600, heroes.to_json if heroes.any?
   redis.del key if heroes.empty?
   {
     hero: hero,

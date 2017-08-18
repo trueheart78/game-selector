@@ -4,6 +4,7 @@ require 'net/http'
 require 'net/https'
 
 require_relative 'html_content'
+require_relative 'redis_adapter'
 
 class Html
   def initialize(url, type = nil)
@@ -19,19 +20,36 @@ class Html
 
   private
 
-  attr_reader :url, :type
+  attr_reader :url, :type, :cached_body
 
   def page_content
-    uri = URI.parse url
+    return cached_body if cached?
+    download_page.tap { |body| cache body }
+  end
 
+  # possibly useful if you see ssl errors
+  # http.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
+  def download_page
+    uri = URI.parse url
     http = Net::HTTP.new(uri.host, uri.port)
-    if uri.scheme == 'https'
-      http.use_ssl = true
-      # possibly useful if you see ssl errors
-      # http.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
-    end
+    http.use_ssl = true if uri.scheme == 'https'
     page = http.start { |session| session.get uri.request_uri }
     return page.body if page.body
     ''
+  end
+
+  def cached?
+    @cached_body = redis.get redis_key
+    !cached_body.nil?
+  end
+
+  def cache(content)
+    return if content.nil? || content.empty?
+    redis.setex redis_key, 600, content
+  end
+
+  def redis_key
+    return :default_html unless type
+    "#{type}_html".to_sym
   end
 end

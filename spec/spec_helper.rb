@@ -12,8 +12,10 @@
 # the additional setup, and require it from the spec files that actually need
 # it.
 #
+ENV['RACK_ENV'] = 'test'
 require 'webmock/rspec'
 require 'byebug'
+require_relative 'contexts/redis_cleanup'
 require_relative 'support/fixtures'
 require_relative 'support/fake_html_content'
 

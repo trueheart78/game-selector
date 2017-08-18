@@ -2,6 +2,8 @@ require_relative 'spec_helper'
 require_relative '../lib/html'
 
 RSpec.describe Html do
+  include_context 'redis cleanup'
+
   describe '#content' do
     before  { stub_html_content }
     subject { described_class.new(url).content }

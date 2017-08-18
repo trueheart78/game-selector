@@ -18,6 +18,8 @@ GEM
     rack-protection (2.0.0)
       rack
     redis (3.3.3)
+    redis-namespace (1.5.3)
+      redis (~> 3.0, >= 3.0.4)
     rspec (3.6.0)
       rspec-core (~> 3.6.0)
       rspec-expectations (~> 3.6.0)
@@ -53,6 +55,7 @@ DEPENDENCIES
   nokogiri
   puma
   redis
+  redis-namespace
   rspec
   shotgun
   sinatra

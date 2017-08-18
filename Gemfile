@@ -8,6 +8,7 @@ gem 'nokogiri'
 gem 'sinatra'
 gem 'puma'
 gem 'redis'
+gem 'redis-namespace'
 
 group :development, :test do
   gem 'shotgun'
