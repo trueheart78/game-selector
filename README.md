@@ -13,3 +13,7 @@ bundle install
 ```
 bundle exec rspec
 ```
+
+# Dependencies
+
+Redis is the only dependency required.
