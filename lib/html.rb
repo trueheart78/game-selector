@@ -11,6 +11,7 @@ class Html
     @url = url
     @type = type
     @content = nil
+    @uri = nil
   end
 
   def content
@@ -30,12 +31,15 @@ class Html
   # possibly useful if you see ssl errors
   # http.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
   def download_page
-    uri = URI.parse url
     http = Net::HTTP.new(uri.host, uri.port)
     http.use_ssl = true if uri.scheme == 'https'
     page = http.start { |session| session.get uri.request_uri }
     return page.body if page.body
     ''
+  end
+
+  def uri
+    @uri ||= URI.parse url
   end
 
   def cached?
@@ -49,7 +53,7 @@ class Html
   end
 
   def redis_key
-    return :default_html unless type
-    "#{type}_html".to_sym
+    return "default_html:#{uri.host}" unless type
+    "#{type}_html:#{uri.host}".to_sym
   end
 end
