@@ -9,11 +9,11 @@ class Site
     private
 
     def default
-      'http://blog.trueheart78.com/games/'
+      'https://blog.trueheart78.com/games/'
     end
 
     def characters
-      'http://blog.trueheart78.com/character-names/'
+      'https://blog.trueheart78.com/character-names/'
     end
 
     def batman
