@@ -24,6 +24,7 @@ class Html
   attr_reader :url, :type, :cached_body
 
   def page_content
+    redis.del redis_key
     return cached_body if cached?
     download_page.tap { |body| cache body }
   end
@@ -31,11 +32,18 @@ class Html
   # possibly useful if you see ssl errors
   # http.verify_mode = ::OpenSSL::SSL::VERIFY_NONE
   def download_page
-    http = Net::HTTP.new(uri.host, uri.port)
-    http.use_ssl = true if uri.scheme == 'https'
-    page = http.start { |session| session.get uri.request_uri }
-    return page.body if page.body
-    ''
+    loop do
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.use_ssl = true if uri.scheme == 'https'
+      page = http.start { |session| session.get uri.request_uri }
+      if page.code.start_with? '3'
+        @uri = URI.parse page['location']
+      elsif page.code.start_with? '2'
+        return page.body
+      else
+        break
+      end
+    end
   end
 
   def uri
