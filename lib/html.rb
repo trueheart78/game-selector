@@ -24,7 +24,6 @@ class Html
   attr_reader :url, :type, :cached_body
 
   def page_content
-    redis.del redis_key
     return cached_body if cached?
     download_page.tap { |body| cache body }
   end
