@@ -17,7 +17,7 @@ class Site
     end
 
     def batman
-      'https://doggettck.github.io'
+      'http://www.bonuserupt.us'
     end
   end
 end
